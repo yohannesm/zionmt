@@ -63,8 +63,7 @@ class Matrix {
          * <your documentation>
          */
         friend bool operator == (const Matrix& lhs, const Matrix& rhs) {
-            // <your code>
-            return false;}
+            return lhs == rhs;}
         
         // ----------
         // operator <
@@ -75,7 +74,7 @@ class Matrix {
          */
         friend bool operator < (const Matrix& lhs, const Matrix& rhs) {
             // <your code>
-            return false;}
+            return lhs < rhs;}
 
         // ----------
         // operator +
@@ -162,9 +161,13 @@ class Matrix {
         /**
          * <your documentation>
          */
-        explicit Matrix (const T& v = T()) {
-            // <your code>
-            }
+        explicit Matrix (const value_type& v = value_type()) {
+            for(unsigned int i=0; i < R; i++){
+	    	m[i](v);
+		}
+
+	    }
+
 
         // Default copy, destructor, and copy assignment.
         // Matrix (const Matrix&);
@@ -180,10 +183,8 @@ class Matrix {
          */
         reference operator [] (size_type i) {
             // <your code>
-            // dummy is just to be able to compile the skeleton, remove it
-            static value_type dummy;
-            return dummy;}
-
+	   return m[i];
+	}
         /**
          * <your documentation>
          */
@@ -191,8 +192,7 @@ class Matrix {
             // <your code>
             // you must call the non-const operator[]()
             // dummy is just to be able to compile the skeleton, remove it
-            static value_type dummy;
-            return dummy;}
+            return const_cast<Matrix&>(*this)[i];}
 
         // -----------
         // operator +=
@@ -202,7 +202,11 @@ class Matrix {
          * <your documentation>
          */
         Matrix& operator += (const T& rhs) {
-            // <your code>
+            for(unsigned int i=0; i < R; i++){
+	        for(unsigned int j=0; i < C; i++){
+			m[i][j] += rhs;
+			}
+	    	}
             return *this;}
 
         // -----------
@@ -213,9 +217,12 @@ class Matrix {
          * <your documentation>
          */
         Matrix& operator += (const Matrix& rhs) {
-            // <your code>
+            for(unsigned int i=0; i < R; i++){
+	        for(unsigned int j=0; i < C; i++){
+			m[i][j] += rhs[i][j];
+			}
+	    	}
             return *this;}
-
         // -----------
         // operator -=
         // -----------
@@ -224,7 +231,11 @@ class Matrix {
          * <your documentation>
          */
         Matrix& operator -= (const T& rhs) {
-            // <your code>
+            for(unsigned int i=0; i < R; i++){
+	        for(unsigned int j=0; i < C; i++){
+			m[i][j] -= rhs;
+			}
+	    	}
             return *this;}
 
         // -----------
@@ -235,7 +246,11 @@ class Matrix {
          * <your documentation>
          */
         Matrix& operator -= (const Matrix& rhs) {
-            // <your code>
+            for(unsigned int i=0; i < R; i++){
+	        for(unsigned int j=0; i < C; i++){
+			m[i][j] -= rhs[i][j];
+			}
+	    	}
             return *this;}
 
         // -----------
@@ -246,7 +261,11 @@ class Matrix {
          * <your documentation>
          */
         Matrix& operator *= (const T& rhs) {
-            // <your code>
+            for(unsigned int i=0; i < R; i++){
+	        for(unsigned int j=0; i < C; i++){
+			m[i][j] *= rhs;
+			}
+	    	}
             return *this;}
 
         // -----------
@@ -258,7 +277,13 @@ class Matrix {
          * @throws invalid_argument if (rhs == 0)
          */
         Matrix& operator /= (const T& rhs) {
-            // <your code>
+	  if(rhs == 0)
+	  	throw std::invalid_argument("Matrix /= operator::invalid args");
+            for(unsigned int i=0; i < R; i++){
+	        for(unsigned int j=0; i < C; i++){
+			m[i][j] /= rhs;
+			}
+	    	}
             return *this;}
 
         // -----------
@@ -270,7 +295,13 @@ class Matrix {
          * @throws invalid_argument if (rhs <= 0)
          */
         Matrix& operator %= (const T& rhs) {
-            // <your code>
+	  if(rhs == 0)
+	  	throw std::invalid_argument("Matrix %= operator::invalid args");
+            for(unsigned int i=0; i < R; i++){
+	        for(unsigned int j=0; i < C; i++){
+			m[i][j] %= rhs;
+			}
+	    	}
             return *this;}
 
         // -----
@@ -283,7 +314,11 @@ class Matrix {
          */
         template <typename UF>
         Matrix& apply (UF f) {
-            // <your code>
+            for(unsigned int i=0; i < R; i++){
+	        for(unsigned int j=0; i < C; i++){
+			m[i][j] = f(m[i][j]);
+			}
+		}
             return *this;}
 
         // --
@@ -355,8 +390,9 @@ class Matrix {
          * <your documentation>
          */
         size_type size () const {
-            // <your code>
-            return 0;}};
+            return R * C;}
+	    
+	  };// end class Matrix
 
 // -----
 // apply

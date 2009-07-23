@@ -39,8 +39,8 @@ class Matrix {
         // --------
         // typedefs
         // --------
-
-        typedef ?                 value_type;
+	typedef A		  allocator_type;
+        typedef T                 value_type;
 
         typedef std::size_t       size_type;
         typedef std::ptrdiff_t    difference_type;
@@ -149,8 +149,10 @@ class Matrix {
         friend Matrix operator % (Matrix lhs, const T& rhs) {
             return lhs %= rhs;}
 
+//template <typename T, std::size_t R, std::size_t C, typename A = std::allocator<T> >
     private:
-        // <your data>
+	allocator_type mal;
+	Array< Array<T, C, A> , R, A > m;
 
     public:
         // ------------

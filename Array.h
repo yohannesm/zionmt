@@ -16,12 +16,37 @@
 #include <stdexcept> // out_of_range
 #include <utility>   // !=, <=, >, >=
 #include <iostream> // cout
+
+template <typename A, typename BI, typename U>
+BI uninit_fill(A& a, BI b, BI e, const U& v){
+	BI p = b;
+	try{
+		while(b!=e){
+		a.construct(&*b, v);
+		++b; 
+		}
+	}
+	catch(...){
+	destroyer(a, p, b);
+	throw;
+	}
+	return e;
+}
+
+template<typename A, typename BI>
+BI destroyer (A& a, BI b, BI e) {
+	while(b!=e){
+	--e;
+	a.destroy(&*e);
+	}
+	return b;
+}
+
 // -----
 // using
 // -----
 
 using namespace std::rel_ops;
-
 // ----------
 // namespaces
 // ----------
@@ -32,13 +57,14 @@ namespace My {
 // Array
 // -----
 
-template <typename T, std::size_t N>
+
+template <typename T, std::size_t N, typename A = std::allocator<T> >
 class Array {
     public:
         // --------
         // typedefs
         // --------
-
+	typedef A		  allocator_type;
         typedef T                 value_type;
 
         typedef std::size_t       size_type;
@@ -65,7 +91,7 @@ class Array {
          */
         friend bool operator == (const Array& lhs, const Array& rhs) {
             // you must use std::equal()
-	    return std::equal(lhs.a, lhs.a + N, rhs.a );
+	    return std::equal(lhs.begin(), lhs.a + N, rhs.a );
             }
         
         // ----------
@@ -97,19 +123,22 @@ class Array {
 	}
 */
     private:
+    	allocator_type malc;
         value_type a[N];
 
     public:
         // ------------
         // constructors
         // ------------
-
+	
         /**
          * initialize the array of size N
 	 * with N element
          */
-        explicit Array (const_reference v = value_type()) {
-            std::fill(a, a+N, v);
+        explicit Array (const_reference v = value_type(), 
+			const allocator_type& mlc = allocator_type()) : malc(mlc) {
+            //std::fill(a, a+N, v);
+	    uninit_fill(this->malc, a, a+N, v); 
             }
 
         /**

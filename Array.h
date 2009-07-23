@@ -156,9 +156,10 @@ class Array {
 
         // Default copy, destructor, and copy assignment.
         // Array (const Array&);
-        // ~Array ();
         // Array& operator = (const Array&);
-
+	~Array(){
+	   destroyer(this->malc, a, a + N);
+	}
         // -----------
         // operator []
         // -----------

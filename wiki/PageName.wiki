@@ -20,4 +20,17 @@ constructor that takes the array containing the constant value.
 constructor that takes the array containing the pointer to the array.
 == reference operator [] ==
 subscript for the matrix. It returns the pointer pointing to array.
-== 
+== const_reference operator [] == 
+const subscript for the matrix. It returns the pointer pointing to the const array. 
+== operator += ==
+It works in same way as '+'
+== operator -= ==
+It works in same way as '-'
+== operator *= ==
+It works in same way as '*'
+== operator /= ==
+It works in same way as '/'
+== operator %= ==
+It works in same way as '%'
+== apply ==
+applying function into each elements in Matrix.

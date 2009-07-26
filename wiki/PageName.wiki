@@ -7,7 +7,17 @@ It tells whether the both matrix is same or not.
 == bool operator < ==
 It tells whether the rhs matrix's values are larger than lhs matrix's values.
 ==  operator + ==
-Add the some constant value to the each value in the Matrix.
-== operator + ==
-Add each value from rhs Matrix to the lhs Matrix.
+Add the some constant value to the each value in the Matrix. Add also each value from rhs Matrix to the lhs Matrix.
 == operator - ==
+subtract the constant value from the Matrix. subtract each value from rhs Matrix to the lhs Matrix.
+== operator * ==
+Multiply the constant value to each value in the Matrix.
+== operator / ==
+Divide each value from the matrix by constant value.
+== constructor containing constant value ==
+constructor that takes the array containing the constant value.
+== constructor containing the pointer ==
+constructor that takes the array containing the pointer to the array.
+== reference operator [] ==
+subscript for the matrix. It returns the pointer pointing to array.
+== 

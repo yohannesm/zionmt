@@ -27,12 +27,21 @@ struct TestMatrix : CppUnit::TestFixture {
     // -----
     // tests
     // -----
-
+    void test_matrix_defConstrV(){
+    My::Array <int, 4> b(4);
+     My::Matrix<int, 3, 4> a(b);
+    }
+    void test_matrix_defConstrT(){
+     My::Matrix<int, 3, 4> a(10);
+     }
     // -----
     // suite
     // -----
-
     CPPUNIT_TEST_SUITE(TestMatrix);
+
+    CPPUNIT_TEST(test_matrix_defConstrV);
+    CPPUNIT_TEST(test_matrix_defConstrT);
+
     CPPUNIT_TEST_SUITE_END();};
 
 #endif // TestMatrix_h

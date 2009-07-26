@@ -40,7 +40,7 @@ class Matrix {
         // typedefs
         // --------
 	typedef A		  allocator_type;
-        typedef T                 value_type;
+        typedef Array<T, C, A>        value_type;
 
         typedef std::size_t       size_type;
         typedef std::ptrdiff_t    difference_type;
@@ -60,7 +60,8 @@ class Matrix {
         // -----------
 
         /**
-         * <your documentation>
+         * == operator 
+	 * to check whether two matrix object is equaivalent to each other
          */
         friend bool operator == (const Matrix& lhs, const Matrix& rhs) {
             size_type row = lhs.end() - lhs.begin();
@@ -75,7 +76,8 @@ class Matrix {
         // ----------
 
         /**
-         * <your documentation>
+         * to check whether the lhs Matrix object is less than the
+	 * rhs matrix object
          */
         friend bool operator < (const Matrix& lhs, const Matrix& rhs) {
             size_type row = lhs.end() - lhs.begin();
@@ -89,7 +91,8 @@ class Matrix {
         // ----------
 
         /**
-         * <your documentation>
+         * adding all the element of the matrix  by a T value of the rhs 
+	 * of the operator
          */
         friend Matrix operator + (Matrix lhs, const T& rhs) {
             return lhs += rhs;}
@@ -99,7 +102,8 @@ class Matrix {
         // ----------
 
         /**
-         * <your documentation>
+         * Adding a lhs matrix by another matrix on the rhs of the operator 
+	 * returning a new matrix with the added value
          */
         friend Matrix operator + (Matrix lhs, const Matrix& rhs) {
             return lhs += rhs;}
@@ -109,7 +113,8 @@ class Matrix {
         // ----------
 
         /**
-         * <your documentation>
+         * subtracting  each element of the matrix  by a T value of the rhs 
+	 * of the operator
          */
         friend Matrix operator - (Matrix lhs, const T& rhs) {
             return lhs -= rhs;}
@@ -119,7 +124,8 @@ class Matrix {
         // ----------
 
         /**
-         * <your documentation>
+         * Subtracting a lhs matrix by another matrix on the rhs of the operator
+	 * returning a new matrix with the added value
          */
         friend Matrix operator - (Matrix lhs, const Matrix& rhs) {
             return lhs -= rhs;}
@@ -129,7 +135,8 @@ class Matrix {
         // ----------
 
         /**
-         * <your documentation>
+         * multiplying  each element of the matrix  by a T value of the rhs 
+	 * of the operator
          */
         friend Matrix operator * (Matrix lhs, const T& rhs) {
             return lhs *= rhs;}
@@ -138,8 +145,9 @@ class Matrix {
         // operator /
         // ----------
 
-        /**
-         * <your documentation>
+        /*
+         *dividing each element of the matrix  by a T value of the rhs 
+	 * of the operator
          * @throws invalid_argument if (rhs == 0)
          */
         friend Matrix operator / (Matrix lhs, const T& rhs) {
@@ -150,7 +158,8 @@ class Matrix {
         // ----------
 
         /**
-         * <your documentation>
+         *modding  each element of the matrix  by a T value of the rhs 
+	 * of the operator
          * @throws invalid_argument if (rhs <= 0)
          */
         friend Matrix operator % (Matrix lhs, const T& rhs) {
@@ -158,22 +167,25 @@ class Matrix {
 
 //template <typename T, std::size_t R, std::size_t C, typename A = std::allocator<T> >
     private:
-	allocator_type mal;
-	Array< Array<T, C, A> , R, A > m;
+    	typedef typename allocator_type::template rebind<value_type>::other rebinded_alc_type;
+	rebinded_alc_type mal;
+	char co[sizeof (value_type) * R / sizeof(char)];
+	pointer m;
 
     public:
         // ------------
         // constructors
         // ------------
-
+	explicit Matrix(const T& v = T()){
+	    m = reinterpret_cast<pointer>(co);
+	    uninit_fill(this->mal, m, m + R, value_type(v));
+	    }
         /**
          * <your documentation>
          */
-        explicit Matrix (const value_type& v = value_type()) {
-            for(unsigned int i=0; i < R; i++){
-	    	m[i](v);
-		}
-
+        explicit Matrix (const value_type& v = value_type()) : mal() {
+	    m = reinterpret_cast<pointer>(co);
+	    uninit_fill(this->mal, m, m + R, v);
 	    }
 
 
@@ -387,13 +399,19 @@ class Matrix {
         // ----
 
         /**
-         * <your documentation>
+         * Return the row or column size of the matrix 
          */
         size_type size () const {
-            return R * C;}
+            return R;}
 	    
-	  };// end class Matrix
+	size_type row() const{
+	    return R;
+	}
 
+	size_type col() const{
+	    return C;
+	}
+	  };// end class Matrix
 // -----
 // apply
 // -----

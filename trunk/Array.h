@@ -31,6 +31,22 @@ struct A{
 		return *this;
 	}
 };
+template<typename A, typename II, typename BI>
+BI uninit_copy(A& a, II b, II e, BI x){
+   BI p = x;
+   try{
+   	while(b!=e){
+	   a.construct(&*x, *b);
+	   ++b;
+	   ++x;}
+	}
+   catch(...){
+      destroyer(a, p, x);
+      throw;
+      }
+   return x;
+   }
+
 
 template <typename A, typename BI, typename U>
 BI uninit_fill(A& a, BI b, BI e, const U& v){
@@ -139,7 +155,7 @@ class Array {
 */
     private:
     	allocator_type malc;
-	char ca [ (sizeof(T) * N) ];
+	char ca [ (sizeof(T) * N) / sizeof(char) ];
         //value_type a[N];
 	pointer a;
 
@@ -165,7 +181,7 @@ class Array {
 	 * Input Iterator
          */
         template <typename II>
-        Array (II b, II e) {
+        Array (II b, II e, const allocator_type& mlc = allocator_type()): malc(mlc) {
 	    size_type i = 0;
 	    a = reinterpret_cast<pointer>(ca);
             while(b!=e){
@@ -173,15 +189,25 @@ class Array {
 		++b; ++i;
 	    	}
             }
+	/*
+	 *Copy constructor
+	 */
 	Array(const Array& that){
 	malc = that.malc;
 	a = reinterpret_cast<pointer>(ca);
-	std::copy(that.begin(), that.end(), a);
+	uninit_copy(malc, that.begin(), that.end(), a);
 	}
 	
-        // Default copy, destructor, and copy assignment.
-        // Array (const Array&);
-        // Array& operator = (const Array&);
+	/*
+	 *Assignment operator
+	 */
+	Array& operator = (const Array& that){
+	malc = that.malc;
+	std::copy(that.begin(), that.end(), a);
+	}
+	/*
+	 *Destructor
+	 */
 	~Array(){
 	   destroyer(this->malc, a, a + N);
 	}

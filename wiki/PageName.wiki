@@ -1,0 +1,13 @@
+= Introduction =
+
+a program to implement an stack-allocated 2D matrix object.
+
+== bool operator == ==
+It tells whether the both matrix is same or not.
+== bool operator < ==
+It tells whether the rhs matrix's values are larger than lhs matrix's values.
+==  operator + ==
+Add the some constant value to the each value in the Matrix.
+== operator + ==
+Add each value from rhs Matrix to the lhs Matrix.
+== operator - ==

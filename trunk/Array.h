@@ -17,6 +17,21 @@
 #include <utility>   // !=, <=, >, >=
 #include <iostream> // cout
 
+struct A{
+	A(){
+		std::cout << "A() ";}
+
+	A(const A&){
+		std::cout << "A(A) ";}
+
+	~A(){
+		std::cout << "~A() ";}
+	A& operator = (const A&){
+		std::cout << "=(A) ";
+		return *this;
+	}
+};
+
 template <typename A, typename BI, typename U>
 BI uninit_fill(A& a, BI b, BI e, const U& v){
 	BI p = b;
@@ -91,7 +106,7 @@ class Array {
          */
         friend bool operator == (const Array& lhs, const Array& rhs) {
             // you must use std::equal()
-	    return std::equal(lhs.begin(), lhs.a + N, rhs.a );
+	    return std::equal(lhs.begin(), lhs.end(), rhs.begin() );
             }
         
         // ----------
@@ -106,7 +121,7 @@ class Array {
             // <your code>
             // you must use std::lexicographical_compare()
 	    return std::lexicographical_compare(
-	    	lhs.a, lhs.a + N, rhs.a, rhs.a + N
+	    	lhs.begin(), lhs.end(), rhs.begin(), rhs.end()
 		);
             }
 
@@ -124,7 +139,9 @@ class Array {
 */
     private:
     	allocator_type malc;
-        value_type a[N];
+	char ca [ (sizeof(T) * N) ];
+        //value_type a[N];
+	pointer a;
 
     public:
         // ------------
@@ -138,6 +155,8 @@ class Array {
         explicit Array (const_reference v = value_type(), 
 			const allocator_type& mlc = allocator_type()) : malc(mlc) {
             //std::fill(a, a+N, v);
+	    //uninit_fill(this->malc, a, a+N, v); 
+	    a = reinterpret_cast<pointer>(ca);
 	    uninit_fill(this->malc, a, a+N, v); 
             }
 
@@ -148,12 +167,18 @@ class Array {
         template <typename II>
         Array (II b, II e) {
 	    size_type i = 0;
+	    a = reinterpret_cast<pointer>(ca);
             while(b!=e){
 	        a[i] = *b;
 		++b; ++i;
 	    	}
             }
-
+	Array(const Array& that){
+	malc = that.malc;
+	a = reinterpret_cast<pointer>(ca);
+	std::copy(that.begin(), that.end(), a);
+	}
+	
         // Default copy, destructor, and copy assignment.
         // Array (const Array&);
         // Array& operator = (const Array&);

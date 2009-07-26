@@ -63,7 +63,12 @@ class Matrix {
          * <your documentation>
          */
         friend bool operator == (const Matrix& lhs, const Matrix& rhs) {
-            return lhs == rhs;}
+            size_type row = lhs.end() - lhs.begin();
+	    	for(unsigned int i=0; i<row; ++i){
+			if(lhs[i]!=rhs[i]) return false;
+	    		}
+	    return true;
+	    }
         
         // ----------
         // operator <
@@ -73,9 +78,12 @@ class Matrix {
          * <your documentation>
          */
         friend bool operator < (const Matrix& lhs, const Matrix& rhs) {
-            // <your code>
-            return lhs < rhs;}
-
+            size_type row = lhs.end() - lhs.begin();
+	    	for(unsigned int i=0; i<row; ++i){
+			if(lhs[i]>=rhs[i]) return false;
+	    		}
+	    return true;
+	    }
         // ----------
         // operator +
         // ----------
@@ -329,20 +337,16 @@ class Matrix {
          * <your documentation>
          */
         reference at (size_type i) {
-            // <your code>
-            // dummy is just to be able to compile the skeleton, remove it
-            static value_type dummy;
-            return dummy;}
+	    if(i<0 && i>= R)
+	    	throw std::out_of_range("My::Matrix.at(i) invalid args");
+            return m[i];}
 
         /**
          * <your documentation>
          */
         const_reference at (size_type i) const {
-            // <your code>
             // you must call the non-const at()
-            // dummy is just to be able to compile the skeleton, remove it
-            static value_type dummy;
-            return dummy;}
+            return const_cast<Matrix&>(*this).at();}
 
         // -----
         // begin
@@ -352,16 +356,14 @@ class Matrix {
          * <your documentation>
          */
         iterator begin () {
-            // <your code>
-            return 0;}
+            return m;}
 
         /**
          * <your documentation>
          */
         const_iterator begin () const {
-            // <your code>
             // you must call the non-const begin()
-            return 0;}
+            return const_cast<Matrix&>(*this).begin();}
 
         // ---
         // end
@@ -371,16 +373,14 @@ class Matrix {
          * <your documentation>
          */
         iterator end () {
-            // <your code>
-            return 0;}
+            return m + R;}
 
         /**
          * <your documentation>
          */
         const_iterator end () const {
-            // <your code>
             // you must call the non-const end()
-            return 0;}
+            return const_cast<Matrix&>(*this).end();}
 
         // ----
         // size

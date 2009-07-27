@@ -59,7 +59,7 @@ class Matrix {
         // operator ==
         // -----------
 
-        /**
+        /**O(N) average case
          * == operator 
 	 * to check whether two matrix object is equaivalent to each other
          */
@@ -75,7 +75,7 @@ class Matrix {
         // operator <
         // ----------
 
-        /**
+        /**O(N)
          * to check whether the lhs Matrix object is less than the
 	 * rhs matrix object
          */
@@ -176,17 +176,21 @@ class Matrix {
         // ------------
         // constructors
         // ------------
+	// takes in a default value of T
+	// and then initialize all the elements inside that matrix with that value
 	explicit Matrix(const T& v = T()){
 	    m = reinterpret_cast<pointer>(co);
 	    uninit_fill(this->mal, m, m + R, value_type(v));
 	    }
         /**
-         * <your documentation>
+	 * Constructor that takes in an Array as default value
          */
+	#if 0
         explicit Matrix (const value_type& v = value_type()) : mal() {
 	    m = reinterpret_cast<pointer>(co);
 	    uninit_fill(this->mal, m, m + R, v);
 	    }
+	 #endif
 	/*
 	 *Copy Constructor
 	 */
@@ -211,29 +215,23 @@ class Matrix {
 	    destroyer(mal, m, m + R);
 	 }
 
-        // Default copy, destructor, and copy assignment.
-        // Matrix (const Matrix&);
-        // ~Matrix ();
-        // Matrix& operator = (const Matrix&);
-
         // -----------
         // operator []
         // -----------
 
         /**
-         * <your documentation>
+         * Subscript operation on matrix
+	 * @return: returning the specified row of this matrix
          */
         reference operator [] (size_type i) {
-            // <your code>
 	   return m[i];
 	}
         /**
-         * <your documentation>
+         * const Subscript operation on matrix
+	 * @return: returning the specified row of this matrix
          */
         const_reference operator [] (size_type i) const {
-            // <your code>
             // you must call the non-const operator[]()
-            // dummy is just to be able to compile the skeleton, remove it
             return const_cast<Matrix&>(*this)[i];}
 
         // -----------
@@ -241,7 +239,8 @@ class Matrix {
         // -----------
 
         /**
-         * <your documentation>
+         * += operation on this matrix
+	 * adding each value of this matrix by a value of T on the rhs
          */
         Matrix& operator += (const T& rhs) {
             for(unsigned int i=0; i < R; i++){
@@ -256,7 +255,8 @@ class Matrix {
         // -----------
 
         /**
-         * <your documentation>
+         * += operation on this matrix
+	 * adding each value of this matrix by a value of another matrix on the rhs
          */
         Matrix& operator += (const Matrix& rhs) {
             for(unsigned int i=0; i < R; i++){
@@ -270,7 +270,8 @@ class Matrix {
         // -----------
 
         /**
-         * <your documentation>
+         * -= operation on this matrix
+	 * subtracting each value of this matrix by a value of T on the rhs
          */
         Matrix& operator -= (const T& rhs) {
             for(unsigned int i=0; i < R; i++){
@@ -285,7 +286,8 @@ class Matrix {
         // -----------
 
         /**
-         * <your documentation>
+         * -= operation on this matrix
+	 * subtracting each value of this matrix by a value of another matrix on the rhs
          */
         Matrix& operator -= (const Matrix& rhs) {
             for(unsigned int i=0; i < R; i++){
@@ -300,7 +302,8 @@ class Matrix {
         // -----------
 
         /**
-         * <your documentation>
+         * *= operation on this matrix
+	 * multiplying each value of this matrix by a value of T on the rhs
          */
         Matrix& operator *= (const T& rhs) {
             for(unsigned int i=0; i < R; i++){
@@ -315,7 +318,8 @@ class Matrix {
         // -----------
 
         /**
-         * <your documentation>
+         * /= operation on this matrix
+	 * dividing each value of this matrix by a value of T on the rhs
          * @throws invalid_argument if (rhs == 0)
          */
         Matrix& operator /= (const T& rhs) {
@@ -333,7 +337,8 @@ class Matrix {
         // -----------
 
         /**
-         * <your documentation>
+         * %= operation on this matrix
+	 * modding each value of this matrix by a value of T on the rhs
          * @throws invalid_argument if (rhs <= 0)
          */
         Matrix& operator %= (const T& rhs) {
@@ -352,7 +357,9 @@ class Matrix {
 
         /**
          * apply a function or function object to each element
-         * <your documentation>
+         * UF must be a function or act liek a function and have
+	 * operator () overloaded
+	 * f can't be null or zero or the program will crash
          */
         template <typename UF>
         Matrix& apply (UF f) {
@@ -367,8 +374,10 @@ class Matrix {
         // at
         // --
 
-        /**
-         * <your documentation>
+        /** modifiable .at() method
+         * getting the content of the array inside a row of this matrix
+	 * @return reference to the specified array element
+	 * @throw std::out_of_range if size_type i is invalid
          */
         reference at (size_type i) {
 	    if(i<0 || i>= R){
@@ -377,7 +386,10 @@ class Matrix {
             return m[i];}
 
         /**
-         * <your documentation>
+        * const .at() method
+         * getting the content of the array inside a row of this matrix
+	 * @return reference to the specified array element
+	 * @throw std::out_of_range if size_type i is invalid
          */
         const_reference at (size_type i) const {
             // you must call the non-const at()a
@@ -388,13 +400,13 @@ class Matrix {
         // -----
 
         /**
-         * <your documentation>
+         * return an iterator to the beginning row of the matrix
          */
         iterator begin () {
             return m;}
 
         /**
-         * <your documentation>
+         * return a const iterator to the beginning row of the matrix
          */
         const_iterator begin () const {
             // you must call the non-const begin()
@@ -405,13 +417,13 @@ class Matrix {
         // ---
 
         /**
-         * <your documentation>
+         * return an iterator to the one past the end of the row of the matrix
          */
         iterator end () {
             return m + R;}
 
         /**
-         * <your documentation>
+         * return a const iterator to the one past the end of the row of the matrix
          */
         const_iterator end () const {
             // you must call the non-const end()
@@ -441,7 +453,7 @@ class Matrix {
 
 /**
  * apply a function or function object to each element
- * <your documentation>
+ * Matrix copy constructor have to be working correctly for this function to runs
  */
 template <typename T, std::size_t R, std::size_t C, typename A, typename UF>
 Matrix<T, R, C> apply (Matrix<T, R, C, A> x, UF f) {

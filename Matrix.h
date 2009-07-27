@@ -187,7 +187,29 @@ class Matrix {
 	    m = reinterpret_cast<pointer>(co);
 	    uninit_fill(this->mal, m, m + R, v);
 	    }
-
+	/*
+	 *Copy Constructor
+	 */
+        Matrix (const Matrix& that){
+	   this->mal = that.mal;
+	   m = reinterpret_cast<pointer>(co);
+	   uninit_copy(this->mal, that.begin(), that.end(), m);
+	}
+	/*
+	 *Copy Assignment
+	 */
+	 Matrix& operator= (const Matrix& that){
+	 mal = that.mal;
+	 std::copy(that.begin(), that.end(), m);
+	 return *this;
+	 }
+	
+	/*
+	 *Destructor
+	 */
+	 ~Matrix(){
+	    destroyer(mal, m, m + R);
+	 }
 
         // Default copy, destructor, and copy assignment.
         // Matrix (const Matrix&);
@@ -223,7 +245,7 @@ class Matrix {
          */
         Matrix& operator += (const T& rhs) {
             for(unsigned int i=0; i < R; i++){
-	        for(unsigned int j=0; i < C; i++){
+	        for(unsigned int j=0; j < C; j++){
 			m[i][j] += rhs;
 			}
 	    	}
@@ -238,7 +260,7 @@ class Matrix {
          */
         Matrix& operator += (const Matrix& rhs) {
             for(unsigned int i=0; i < R; i++){
-	        for(unsigned int j=0; i < C; i++){
+	        for(unsigned int j=0; j < C; j++){
 			m[i][j] += rhs[i][j];
 			}
 	    	}
@@ -252,7 +274,7 @@ class Matrix {
          */
         Matrix& operator -= (const T& rhs) {
             for(unsigned int i=0; i < R; i++){
-	        for(unsigned int j=0; i < C; i++){
+	        for(unsigned int j=0; j < C; j++){
 			m[i][j] -= rhs;
 			}
 	    	}
@@ -267,7 +289,7 @@ class Matrix {
          */
         Matrix& operator -= (const Matrix& rhs) {
             for(unsigned int i=0; i < R; i++){
-	        for(unsigned int j=0; i < C; i++){
+	        for(unsigned int j=0; j < C; j++){
 			m[i][j] -= rhs[i][j];
 			}
 	    	}
@@ -282,7 +304,7 @@ class Matrix {
          */
         Matrix& operator *= (const T& rhs) {
             for(unsigned int i=0; i < R; i++){
-	        for(unsigned int j=0; i < C; i++){
+	        for(unsigned int j=0; j < C; j++){
 			m[i][j] *= rhs;
 			}
 	    	}
@@ -300,7 +322,7 @@ class Matrix {
 	  if(rhs == 0)
 	  	throw std::invalid_argument("Matrix /= operator::invalid args");
             for(unsigned int i=0; i < R; i++){
-	        for(unsigned int j=0; i < C; i++){
+	        for(unsigned int j=0; j < C; j++){
 			m[i][j] /= rhs;
 			}
 	    	}
@@ -318,7 +340,7 @@ class Matrix {
 	  if(rhs == 0)
 	  	throw std::invalid_argument("Matrix %= operator::invalid args");
             for(unsigned int i=0; i < R; i++){
-	        for(unsigned int j=0; i < C; i++){
+	        for(unsigned int j=0; j < C; j++){
 			m[i][j] %= rhs;
 			}
 	    	}
@@ -335,7 +357,7 @@ class Matrix {
         template <typename UF>
         Matrix& apply (UF f) {
             for(unsigned int i=0; i < R; i++){
-	        for(unsigned int j=0; i < C; i++){
+	        for(unsigned int j=0; j < C; j++){
 			m[i][j] = f(m[i][j]);
 			}
 		}
@@ -349,16 +371,17 @@ class Matrix {
          * <your documentation>
          */
         reference at (size_type i) {
-	    if(i<0 && i>= R)
+	    if(i<0 || i>= R){
 	    	throw std::out_of_range("My::Matrix.at(i) invalid args");
+		}
             return m[i];}
 
         /**
          * <your documentation>
          */
         const_reference at (size_type i) const {
-            // you must call the non-const at()
-            return const_cast<Matrix&>(*this).at();}
+            // you must call the non-const at()a
+            return const_cast<Matrix&>(*this).at(i);}
 
         // -----
         // begin
@@ -402,13 +425,13 @@ class Matrix {
          * Return the row or column size of the matrix 
          */
         size_type size () const {
-            return R;}
+            return R * C;}
 	    
-	size_type row() const{
+	size_type rows() const{
 	    return R;
 	}
 
-	size_type col() const{
+	size_type cols() const{
 	    return C;
 	}
 	  };// end class Matrix

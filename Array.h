@@ -204,6 +204,7 @@ class Array {
 	Array& operator = (const Array& that){
 	malc = that.malc;
 	std::copy(that.begin(), that.end(), a);
+	return *this;
 	}
 	/*
 	 *Destructor

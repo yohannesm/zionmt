@@ -1,6 +1,6 @@
 = Introduction =
 
-a program to implement an stack-allocated 2D matrix object. Matrix must be initialized with an array or  default value, because we have two constructors with same signature. Therefore, it will be ambiguous if we don't specify it. If we don't provide an allocator, Matrix uses the standard allocator from STD library.
+a program to implement an stack-allocated 2D matrix object. Matrix must be initialized with an array or  default value, because we have two constructors with same signature. Therefore, it will be ambiguous if we don't specify it. If we don't provide an allocator, Matrix uses the standard allocator from STD library. Allocator provided will be rebinded into an allocator for an array. For internal data, we used pointer and char array to prevent the compiler from calling the default constructor of array from "Array.h". 
 
 == bool operator == ==
 It tells whether the both matrix is same or not.

@@ -34,3 +34,16 @@ It works in same way as '/'
 It works in same way as '%'
 == apply ==
 applying function into each elements in Matrix.
+== reference at ==
+Returning the reference that can modify the value.
+== const_reference at ==
+const version of reference at.
+== iterator begin == 
+returning the pointer to beginning of the column.
+== const_iterator begin == 
+const version of begin iterator.
+== iterator end ==
+returning the pointer to end of the column.
+== const_iterator end ==
+const version of end iterator.
+== 

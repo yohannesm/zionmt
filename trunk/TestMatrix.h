@@ -34,12 +34,30 @@ struct TestMatrix : CppUnit::TestFixture {
     // -----
     // tests
     // -----
+    #if 0
     void test_matrix_defConstrV(){
     My::Array <int, 4> b(4);
      My::Matrix<int, 3, 4> a(b);
      CPPUNIT_ASSERT(a[0][0] == 4);
      CPPUNIT_ASSERT(a[2][3] == 4);
     }
+    #endif
+    void test_Matrix_default_constructor() {
+		using namespace My;
+		Matrix<int,5,8> a;
+		Matrix<double,5,8> b;
+	}
+	void test_Matrix_default_constructor2() {
+		using namespace My;
+		Matrix<int,1,1> a;
+		Matrix<double,1,1> b;
+	}
+	void test_Matrix_default_constructor3() {
+		using namespace My;
+		Matrix<int,100,100> a;
+		Matrix<double,100,100> b;
+	}
+
     void test_matrix_defConstrT(){
      My::Matrix<int, 3, 4> a(10) ;
      CPPUNIT_ASSERT(a[0][0] == 10);
@@ -416,13 +434,52 @@ struct TestMatrix : CppUnit::TestFixture {
 		c = d;
 		CPPUNIT_ASSERT(c == d);
 	}
+	void test_Matrix_iterators() {
+		using namespace My;
+		func::value = 0;
+		Matrix<int,5,8> a;
+		Matrix<int,5,8> b;
+		a = apply(a, &func::f);
+		b.apply(&func::f);
+		const Matrix<int,5,8> c(b);
+
+		CPPUNIT_ASSERT(*c.begin() == *b.begin());
+		CPPUNIT_ASSERT(c.begin() != b.begin());
+		CPPUNIT_ASSERT(*(b.end()-1) == *(c.end()-1));
+		Matrix<int,5,8>::iterator it = b.begin();
+		CPPUNIT_ASSERT(++++++++++it == b.end());
+	}
+	void test_Matrix_comparators() {
+		using namespace My;
+		func::value = 0;
+		Matrix<int,5,8> a;
+		Matrix<int,5,8> b;
+		a = apply(a, &func::f);
+		func::value = 1;
+		b.apply(&func::f);
+		const Matrix<int,5,8> c(b);
+
+		CPPUNIT_ASSERT(b == c);
+		CPPUNIT_ASSERT(c == b);
+		CPPUNIT_ASSERT(a < b);
+		CPPUNIT_ASSERT(a < c);
+		CPPUNIT_ASSERT(b > a);
+		CPPUNIT_ASSERT(c > a);
+		CPPUNIT_ASSERT(b <= c && b >= c);
+		CPPUNIT_ASSERT(a != b);
+		CPPUNIT_ASSERT(a != c);
+		CPPUNIT_ASSERT(a <= a && b >= b);
+	}
     // -----
     // suite
     // -----
     CPPUNIT_TEST_SUITE(TestMatrix);
 
-    CPPUNIT_TEST(test_matrix_defConstrV);
+    //CPPUNIT_TEST(test_matrix_defConstrV);
     CPPUNIT_TEST(test_matrix_defConstrT);
+    CPPUNIT_TEST(test_Matrix_default_constructor);
+    CPPUNIT_TEST(test_Matrix_default_constructor2);
+    CPPUNIT_TEST(test_Matrix_default_constructor3);
     CPPUNIT_TEST(test_constructor1);
     CPPUNIT_TEST(test_subscript1<int>);
     CPPUNIT_TEST(test_const_subscript1);
@@ -461,7 +518,9 @@ struct TestMatrix : CppUnit::TestFixture {
     CPPUNIT_TEST(test_Matrix_copy_constructor1);
     CPPUNIT_TEST(test_Matrix_copy_assignment);
     CPPUNIT_TEST(test_Matrix_copy_assignment1);
-	
+    CPPUNIT_TEST(test_Matrix_iterators);
+    CPPUNIT_TEST(test_Matrix_comparators);
+    
 
 
     CPPUNIT_TEST_SUITE_END();};

@@ -46,4 +46,7 @@ const version of begin iterator.
 returning the pointer to end of the column.
 == const_iterator end ==
 const version of end iterator.
-== 
+== size_type row() ==
+returning the size of the row.
+== size_type col() ==
+returning the size of the col.
